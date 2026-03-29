@@ -1,0 +1,173 @@
+{% extends 'basic.html' %}
+{% block body %}
+<style>
+.form-box{
+    width: 520px;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 12px;
+}
+
+.form-grid{
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    row-gap: 22px;
+    column-gap: 20px;
+    align-items: center;
+}
+
+.form-grid label{
+    font-weight: 500;
+}
+
+.form-grid input[type="number"],
+.form-grid input[type="text"]{
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid #6c63ff;
+    outline: none;
+    padding: 4px 2px;
+    font-size: 15px;
+}
+
+.height-group{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.gender-group{
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+button#btn{
+    margin-top: 25px;
+    border: none;
+    color: #fff;
+    background: linear-gradient(120deg,#ff6b6b,#5f27cd);
+    padding: 10px 40px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+.center{
+    grid-column: 1 / -1;
+    text-align: center;
+}
+</style>
+
+<body>
+	{%load static%}
+    <section class="banner1" style=" position: relative;
+    width: 100%;
+    height: 105vh;
+    background-size: cover;
+    background-position: center;
+    padding: 200px 0 0 200px;
+	background-image: url({% static 'images/homebanner.png' %});">
+        
+	<div class="form-box">
+    <h2 class="text-center mb-4">Body Fat % Calculator</h2>
+
+    <div class="form-grid">
+
+        <!-- Height -->
+        <label>Height</label>
+        <div class="height-group">
+            <input type="number" id="h" placeholder="Feet">
+            <input type="number" id="i" placeholder="Inches">
+        </div>
+
+        <!-- Weight -->
+        <label>Weight</label>
+        <input type="number" id="w" placeholder="Kg">
+
+        <!-- Gender -->
+        <label>Gender</label>
+        <div class="gender-group">
+            <label><input type="radio" id="m" name="gender"> Male</label>
+            <label><input type="radio" id="f" name="gender"> Female</label>
+        </div>
+
+        <!-- Age -->
+        <label>Age</label>
+        <input type="number" id="a" placeholder="Years">
+
+        <!-- Buttons -->
+        <div class="center">
+            <button id="btn" onclick="BMI()">Calculate</button>
+        </div>
+
+        <div class="center">
+            <a href="/dietplanner" class="btn btn-secondary">Diet Planner</a>
+        </div>
+
+        <div class="center">
+            <p id="result"></p>
+        </div>
+
+    </div>
+</div>
+
+    </section>
+    
+
+
+    
+
+    <script>
+function BMI() {
+    var weight = parseFloat(document.getElementById('w').value);
+    var feet = parseFloat(document.getElementById('h').value);
+    var inch = parseFloat(document.getElementById('i').value);
+    var age = parseInt(document.getElementById('a').value);
+
+    // validation
+    if (isNaN(weight) || isNaN(feet) || isNaN(inch) || isNaN(age)) {
+        document.getElementById("result").innerHTML = "Please fill all fields correctly";
+        return;
+    }
+
+    // ft + inch → meters
+    var totalInches = (feet * 12) + inch;
+    var heightMeters = totalInches * 0.0254;
+
+    // BMI formula
+    var bmi = weight / (heightMeters * heightMeters);
+
+    var bfp = 0;
+
+    // Female
+    if (document.getElementById('f').checked) {
+        bfp = (1.20 * bmi) + (0.23 * age) - 5.4;
+    }
+
+    // Male
+    if (document.getElementById('m').checked) {
+        bfp = (1.20 * bmi) + (0.23 * age) - 16.2;
+    }
+
+    document.getElementById("result").innerHTML =
+        "<br>Your Body Fat Percentage is " + bfp.toFixed(2) + "%";
+}
+</script>
+
+  
+
+
+
+    <!-- Bootstrap-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    window.addEventListener("scroll", function(){
+        var header = document.querySelector("header");
+        header.classList.toggle("sticky", window.scrollY > 0);
+    })
+    </script>
+    
+
+
+
+{% endblock %}
